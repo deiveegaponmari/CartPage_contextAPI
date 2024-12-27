@@ -2,16 +2,23 @@ import React, { createContext, useState, useEffect } from 'react';
 export const ProductContext = createContext({
     products: [], //initial state
     setProducts: () => { },
+    selectValue: 1,
+    setSelectValue: () => { },
+    subTotal: 0,
+    subSetTotal: () => { },
+    Total: 0,
+    subTotalvalue: () => { },
+    individualTotals:{},
+    setIndividualTotals:()=>{},
     handleRemove: () => { },
-    handlechange:()=>{}
+    handlechange: () => { }
 })
 export default function ProductContextProvider({ children }) {
     const [products, setProducts] = useState([]);
     const [selectValue, setSelectValue] = useState(1);
-   // const [price, setPrice] = useState(0);
-   const[subTotal,subSetTotal]=useState(0);
-    const [shipping,setShipping]=useState("")
-    const [Total, subTotalvalue] = useState(0);
+    const[subTotal,subSetTotal]=useState(0);
+    const[ Total,subTotalvalue]=useState(0);
+    const [individualTotals, setIndividualTotals] = useState({});
 
     useEffect(() => {
         fetch("http://localhost:5173/products.json")
@@ -25,30 +32,39 @@ export default function ProductContextProvider({ children }) {
         const Removedata = products.filter((item) => item.id !== id)
         setProducts(Removedata)
     }
-    function handlechange(value, itemPrice, id,shipping) {
+    function handlechange(value, id) {
         setSelectValue(value);
-        console.log(value,itemPrice,id)
-        const matchingProduct=products.find((item)=>item.id===id);
-       // console.log(matchingProduct.itemPrice)
-        if(matchingProduct){
-            const subTotal=value * itemPrice;
-            console.log(subTotal);
-            subSetTotal(subTotal);
-            
-            if(shipping){
-                setshipping(shipping)
-            }else{
-                const Total=shipping + subTotal;
-                subsetTotal(Total)
-            }
+        const matchingProduct = products.find((item) => item.id === id);
+        if(!matchingProduct){
+            console.log("Product Not Found");
+            return;
         }
-        setSelectValue(value)
-        setPrice(itemPrice)
-        subsetTotal(value * itemPrice)
+        //calculate subtotal
+        const subTotal = value * matchingProduct.price;
+        subSetTotal(subTotal)
+        //calculate the shipping cost
+        const shippingCost = typeof matchingProduct.shipping === "number" && Number.isFinite(matchingProduct.shipping)
+            ? matchingProduct.shipping : 0;
+
+            //calculate total
+        const Total = shippingCost + subTotal;
+        subTotalvalue(Total);
+
+        //update result individual id product
+        setIndividualTotals((Prevalue)=>({
+            ...Prevalue,
+            [id]:{subTotal,Total}
+        }))
+
+
     }
     const value = {
         products,
-        setProducts,
+        selectValue,
+        subTotal,
+        Total,
+        individualTotals,
+        setIndividualTotals,
         handleRemove,
         handlechange
     }

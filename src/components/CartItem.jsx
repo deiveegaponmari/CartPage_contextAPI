@@ -1,15 +1,23 @@
 import React,{useState,useContext} from "react";
-import { ProductContext } from "../contexts/ProductContextProvider";
-import Calculate from "./Calculate";
+import { ProductContext } from "../contexts/ProductContextProvider"
 export default function CartItem() {
-  const{products,setProducts,handleRemove,handlechange}=useContext(ProductContext)
+  const{  products,
+    selectValue,
+    subTotal,
+    Total,
+    individualTotals,
+    setIndividualTotals,
+    handleRemove,
+    handlechange}=useContext(ProductContext)
  
    return (
 
     <div className='container'>
+    <div className="row">
       {
         products.map((element, index) => {
-          return <div className='card' key={`${element.title}-${index}`} style={{ width: "30rem", height: "30rem" }}>
+          return <div className="col-md-6 "  key={`${element.title}-${index}`} >
+          <div className='card'style={{ width: "30rem", height: "30rem" }}>
             <div className="card-body">
                 <div className="d-flex ">
                   <div className="flex-shrink-0">
@@ -25,12 +33,12 @@ export default function CartItem() {
                   <div className="btn-group">
                       <button type="button" className="btn btn-danger dropdown-toggle" 
                       data-bs-toggle="dropdown" aria-expanded="false" >
-                      1
+                      {selectValue}
                       </button>
                       <ul className="dropdown-menu">
-                        <li><button className="dropdown-item" onClick={()=>handlechange(1,element.price,element.id,element.shipping)}>1</button></li>
-                        <li><button className="dropdown-item"  onClick={()=>handlechange(2,element.price,element.id,element.shipping)}>2</button></li>
-                        <li><button className="dropdown-item"  onClick={()=>handlechange(3,element.price,element.id,element.shipping)}>3</button></li>
+                        <li><button className="dropdown-item" onClick={()=>handlechange(1,element.id)}>1</button></li>
+                        <li><button className="dropdown-item"  onClick={()=>handlechange(2,element.id)}>2</button></li>
+                        <li><button className="dropdown-item"  onClick={()=>handlechange(3,element.id)}>3</button></li>
                       </ul>
                     </div>
                     <p>{element.price}</p>
@@ -39,15 +47,32 @@ export default function CartItem() {
                 
                 </div>
                 <hr></hr>
-                <Calculate/>
+                {/* 
+                <Calculate/> */}
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <p className="mb-1">SUBTOTAL:</p>
+                    <p className="mb-1">SHIPPING:</p>
+                    <hr />
+                    <p className="fw-bold fs-5">TOTAL:</p>
+                  </div>
+                  <div className="text-end">
+                    <p className="mb-1 fw-bold">{individualTotals[element.id]?.subTotal || 0}</p>
+                    <p className="mb-1 text-success fw-bold">{element.shipping}</p>
+                    <hr/>
+                    <p className="fw-bold fs-5">{individualTotals[element.id]?.Total || 0}</p>
+                  </div>
+                  </div>
               </div>
 
             
             <div>
             </div>
+            </div>
           </div>
         })
       }
+    </div>
     </div>
   )
 }

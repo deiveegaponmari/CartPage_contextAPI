@@ -12,11 +12,10 @@ export default function CartItem() {
  
    return (
 
-    <div className='container'>
-    <div className="row">
+    <div className='container d-flex align-content-center justify-content-center flex-wrap'>
       {
         products.map((element, index) => {
-          return <div className="col-md-6 m-2 "  key={`${element.title}-${index}`} >
+          return <div className=" m-2 "  key={`${element.title}-${index}`} >
           <div className='card'style={{ width: "30rem", height: "30rem" }}>
             <div className="card-body">
                 <div className="d-flex ">
@@ -73,6 +72,6 @@ export default function CartItem() {
         })
       }
     </div>
-    </div>
+  
   )
 }

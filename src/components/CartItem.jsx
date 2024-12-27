@@ -16,7 +16,7 @@ export default function CartItem() {
     <div className="row">
       {
         products.map((element, index) => {
-          return <div className="col-md-6 "  key={`${element.title}-${index}`} >
+          return <div className="col-md-6 m-2 "  key={`${element.title}-${index}`} >
           <div className='card'style={{ width: "30rem", height: "30rem" }}>
             <div className="card-body">
                 <div className="d-flex ">

@@ -55,8 +55,6 @@ export default function ProductContextProvider({ children }) {
             ...Prevalue,
             [id]:{subTotal,Total}
         }))
-
-
     }
     const value = {
         products,
